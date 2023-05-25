@@ -1,0 +1,17 @@
+# progress tracking
+tqdm==4.65.0
+
+# natural language processing
+openai==0.27.2
+
+# text extraction
+trafilatura==1.6.0
+
+# PDFs
+PyPDF2==3.0.1
+
+# Telegram
+python-telegram-bot==20.2
+
+# YouTube
+youtube_transcript_api==0.6.0
