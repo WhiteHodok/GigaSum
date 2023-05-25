@@ -27,3 +27,5 @@
 ```sh
 # Установка библиотек
 pip install -r requirements.txt
+
+py bot.py
