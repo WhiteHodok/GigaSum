@@ -1,5 +1,6 @@
 ![image](https://github.com/WhiteHodok/GigaSum/assets/39564937/39bd4836-a18d-4878-b933-5a212b770492)
 
+src for bot from : https://github.com/tpai
 
 # SGPT
 
@@ -35,3 +36,8 @@
 pip install -r requirements.txt
 
 py bot.py
+
+
+
+
+
