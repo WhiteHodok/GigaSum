@@ -1,7 +1,7 @@
 # SGPT
 
 
-- RUS Bot: https://t.me/
+- RUS Bot: https://t.me/SGPTRUS_bot
 
 
 ## Features
