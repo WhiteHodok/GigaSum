@@ -10,8 +10,8 @@ from youtube_transcript_api import YouTubeTranscriptApi
 
 telegram_token = ""
 apikey = ""
-model = "gpt-3.5-turbo"
-lang = "Russian"
+model = ""
+lang = ""
 
 chunk_size= 1500
 
@@ -26,7 +26,7 @@ def split_user_input(text):
 
 def scrape_text_from_url(url):
     """
-    Scrape the content from the URL
+    Парсим содержимое с URL-адреса
     """
     try:
         downloaded = trafilatura.fetch_url(url)
@@ -36,13 +36,13 @@ def scrape_text_from_url(url):
         text_chunks = text.split("\n")
         article_content = [text for text in text_chunks if text]
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Ошибка: {e}")
 
     return article_content
 
 def summarize(text_array):
     """
-    Summarize the text using GPT API
+    Резюмируйте текст с помощью GPT API
     """
 
     def create_chunks(paragraphs):
@@ -65,21 +65,21 @@ def summarize(text_array):
         # Call the GPT API in parallel to summarize the text chunks
         summaries = []
         with ThreadPoolExecutor() as executor:
-            futures = [executor.submit(call_gpt_api, f"Summarize the following text using half the number of words:\n{chunk}") for chunk in text_chunks]
+            futures = [executor.submit(call_gpt_api, f"Резюмируйте следующий текст, используя вдвое меньшее количество слов:\n{chunk}") for chunk in text_chunks]
             for future in tqdm(futures, total=len(text_chunks), desc="Summarizing"):
                 summaries.append(future.result())
 
         if len(summaries) <= 5:
             summary = ' '.join(summaries)
             with tqdm(total=1, desc="Final summarization") as progress_bar:
-                final_summary = call_gpt_api(f"Please summarize the following text as a markdown list in {lang}, ensuring the terminology remains untranslated:\n{summary}")
+                final_summary = call_gpt_api(f"Пожалуйста, обобщите следующий текст в виде списка в формате markdown в {lang}, обеспечение того, чтобы терминология оставалась непереведенной:\n{summary}")
                 progress_bar.update(1)
             return final_summary
         else:
             return summarize(summaries)
     except Exception as e:
         print(f"Error: {e}")
-        return "Unknown error! Please contact the developer."
+        return "Неизвестная ошибка! Пожалуйста, свяжитесь с разработчиком @whitehodok."
 
 def extract_youtube_transcript(youtube_url):
     try:
@@ -97,7 +97,7 @@ def extract_youtube_transcript(youtube_url):
 def retrieve_yt_transcript_from_url(youtube_url):
     output = extract_youtube_transcript(youtube_url)
     if output == 'no transcript':
-        raise ValueError("There's no valid transcript in this video.")
+        raise ValueError("Тут нет русских субтитров для видео!(это не ваша вина)")
     # Split output into an array based on the end of the sentence (like a dot),
     # but each chunk should be smaller than chunk_size
     output_sentences = output.split(' ')
@@ -117,7 +117,7 @@ def retrieve_yt_transcript_from_url(youtube_url):
 
 def call_gpt_api(prompt):
     """
-    Call GPT API to summarize the text or provide key takeaways
+    Вызов GPT API для подведения итогов текста или предоставления основных выводов
     """
     try:
         openai.api_key = apikey
@@ -133,13 +133,13 @@ def call_gpt_api(prompt):
 
 async def start(update, context):
     try:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="I can summarize the text, URL, PDF and YouTube video for you.")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="Я могу обобщить для вас текст, URL, PDF и видео на YouTube.")
     except Exception as e:
         print(f"Error: {e}")
 
 async def help(update, context):
     try:
-        await context.bot.send_message(chat_id=update.effective_chat.id, text="Please report bugs here. 👉 https://github.com/tpai/summary-gpt-bot")
+        await context.bot.send_message(chat_id=update.effective_chat.id, text="Сообщайте о багах здесь. 👉 https://github.com/whitehodok/gigasum")
     except Exception as e:
         print(f"Error: {e}")
 
@@ -166,7 +166,7 @@ async def handle_summarize(update, context):
         print(text_array)
 
         if not text_array:
-            raise ValueError("No content found to summarize.")
+            raise ValueError("Не найдено содержимого для конспектирования")
         
         await context.bot.send_chat_action(chat_id=chat_id, action="TYPING")
         summary = summarize(text_array)
