@@ -15,12 +15,12 @@
 
 | Переменная           | Описание |
 |----------------------|-------------|
-| telegram_token       | API key for OpenAI GPT API (required) |
-| apikey               | Model to use for text summarization (default: gpt-3.5-turbo) |
-| model                | Token for Telegram API (required) |
-| lang              | Language of the text to be summarized (default: Taiwanese Mandarin) |
+| telegram_token       | Ваш токен с OpenAI (https://platform.openai.com/account/api-keys) (required) |
+| apikey               |  Ваш токен с OpenAI (https://platform.openai.com/account/api-keys) (default: gpt-3.5-turbo) |
+| model                | Модель (выбирайте между 3.5 турбо и давинчи 003, всё остальное не корректно робит) (required) |
+| lang              | Язык текста для анализа (default: Russian) |
 
 
 ```sh
-# install libraries
+# Установка библиотек
 pip install -r requirements.txt
